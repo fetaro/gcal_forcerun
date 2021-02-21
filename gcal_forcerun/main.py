@@ -185,8 +185,10 @@ def main():
                 elif (time_to_start_sec < FORCERUN_MIN * 60):
                     logger.info(f"[start in {FORCERUN_MIN} min] {event}")
                     if Db.is_include(event.id):
+                        # 一度強制起動しているため、スキップ
                         logger.info(f"skip ")
                     else:
+                        # 強制起動
                         logger.info(f"open event url ")
                         event.open_event_url()
                         Db.save_id(event.id)
