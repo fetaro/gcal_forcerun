@@ -1,15 +1,15 @@
-# Google会議のオンライン会議を強制的に始めるツール(gcal_forcerun)
+# Googleカレンダーのオンライン会議を強制的に始めるツール(gcal_forcerun)
 
 ### 概要
 
-Googleカレンダーに登録されたオンライン会議の開始前になったら、Google Chromeでその会議のURLを起動する。
+Googleカレンダーに登録されたオンライン会議の開始前になったら、その会議のURLを起動する。
 GoogleMeetとZoomに対応。
 
 ### 動作環境
 
 * MacOS
-* Google Chrome ()
 * Python 3.9
+* Google Chromeなどのブラウザ
 
 ### 使い方
 
@@ -30,6 +30,9 @@ poetry install
 ```$xslt
 13,14,28,29,43,44,58,59 * * * * python /path/to/gcal_forcerun/main.py >> /tmp/gcal_forcerun.log 2>&1
 ```
+
+これにより、13分起動のタイミングで15分開始の会議を強制開始できる。
+何らかの理由により13分起動の処理が失敗しても、その後の14分起動の処理でリトライできる。
 
 #### 注意
 
