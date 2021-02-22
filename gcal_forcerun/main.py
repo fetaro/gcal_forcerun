@@ -123,7 +123,7 @@ class Db:
             # 初回は作る
             FORCERUN_EVENT_IDS_PATH.touch()
             os.chmod(FORCERUN_EVENT_IDS_PATH, 0o755)
-            logger.info(f"make {FORCERUN_EVENT_IDS_PATH}")
+            logger.info(f"created {FORCERUN_EVENT_IDS_PATH}")
         with open(FORCERUN_EVENT_IDS_PATH, "r") as f:
             for line in f.readlines():
                 if line.find(id) > -1:
@@ -186,10 +186,10 @@ def main():
                     logger.info(f"[start in {FORCERUN_MIN} min] {event}")
                     if Db.is_include(event.id):
                         # 一度強制起動しているため、スキップ
-                        logger.info(f"skip ")
+                        logger.info("skip")
                     else:
                         # 強制起動
-                        logger.info(f"open event url ")
+                        logger.info("open event url")
                         event.open_event_url()
                         Db.save_id(event.id)
                 else:
