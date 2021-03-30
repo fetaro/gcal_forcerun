@@ -177,7 +177,7 @@ def main():
     if not event_dict_list:
         logger.info('No upcoming events found.')
     for event_dict in event_dict_list:
-        for event in [GoogleMeet(event_dict), Zoom(event_dict)]:
+        for event in [Zoom(event_dict), GoogleMeet(event_dict)]:
             if (event.is_online_meet()):
                 time_to_start_sec = event.time_to_start_sec()
                 if (time_to_start_sec < 0):
