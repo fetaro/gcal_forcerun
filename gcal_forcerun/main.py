@@ -36,7 +36,10 @@ FORCERUN_EVENT_IDS_PATH = THIS_DIR / "work" / "forcerun_event_id.txt"
 # ロガー
 log_format = logging.Formatter("%(asctime)s [%(levelname)8s] %(message)s")
 logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+if "DEBUG" in os.environ:
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.INFO)
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setFormatter(log_format)
 logger.addHandler(stdout_handler)
@@ -52,19 +55,20 @@ class Event(metaclass=ABCMeta):
         self.event = event
         self.start_at = datetime.datetime.fromisoformat(event['start'].get('dateTime', event['start'].get('date')))
         self.summary = event['summary']
+        self.url = self._parse_url()
 
     @abstractmethod
-    def url(self) -> str:
+    def _parse_url(self) -> str:
         pass
 
-    def is_online_meet(self) -> bool:
-        return self.url() != ""
+    def is_online_meeting(self) -> bool:
+        return self.url != ""
 
     def open_event_url(self):
-        os.system(f"open -a '{LAUNCH_APPLICATION}' {self.url()}")
+        os.system(f"open -a '{LAUNCH_APPLICATION}' {self.url}")
 
     def __str__(self):
-        return f"{self.start_at} {self.summary} {self.url()}"
+        return f"{self.start_at} {self.summary} {self.url}"
 
     def time_to_start_sec(self):
         # あと何秒で開始するか
@@ -76,10 +80,7 @@ class GoogleMeet(Event):
     GoogleMeetのイベント
     """
 
-    def open_event_url(self):
-        os.system(f"open -a '{LAUNCH_APPLICATION}' {self.url()}")
-
-    def url(self) -> str:
+    def _parse_url(self) -> str:
         for entry_point in self.event.get("conferenceData", {}).get("entryPoints", []):
             if entry_point['entryPointType'] == 'video':
                 return entry_point['uri']
@@ -90,9 +91,8 @@ class Zoom(Event):
     """
     Zoomのイベント
     """
-    REG_URL = re.compile(r"(https://zoom.us/.*)\r\n")
 
-    def url(self) -> str:
+    def _parse_url(self) -> str:
         """
         locationもしくは本文にURLがあれば抽出する
         """
@@ -100,7 +100,25 @@ class Zoom(Event):
         if location.find("zoom.us") > -1:
             return location
         description = self.event.get("description", "")
-        _m = Zoom.REG_URL.search(description)
+        reg_url = re.compile(r"(https://zoom.us/.*)\r\n")
+        _m = reg_url.search(description)
+        if _m is not None:
+            return _m.group(1)
+        return ""
+
+
+class Teams(Event):
+    """
+    Teamsのイベント
+    """
+
+    def _parse_url(self) -> str:
+        """
+        本文にURLがあれば抽出する
+        """
+        description = self.event.get("description", "")
+        reg_url = re.compile(r'a href="(https://teams.microsoft.com/l/meetup-join.*)">https://teams.microsoft.com/l/meetup-join')
+        _m = reg_url.search(description)
         if _m is not None:
             return _m.group(1)
         return ""
@@ -177,8 +195,8 @@ def main():
     if not event_dict_list:
         logger.info('No upcoming events found.')
     for event_dict in event_dict_list:
-        for event in [Zoom(event_dict), GoogleMeet(event_dict)]:
-            if (event.is_online_meet()):
+        for event in [Zoom(event_dict), GoogleMeet(event_dict), Teams(event_dict)]:
+            if event.is_online_meeting():
                 time_to_start_sec = event.time_to_start_sec()
                 if (time_to_start_sec < 0):
                     logger.info(f"[already started] {event}")
