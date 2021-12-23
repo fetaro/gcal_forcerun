@@ -3,7 +3,7 @@
 ### 概要
 
 Googleカレンダーに登録されたオンライン会議の開始前になったら、その会議のURLを起動する。
-GoogleMeetとZoomに対応。
+Google MeetとZoomとMicrosoft Temasに対応。
 
 ### 動作環境
 
