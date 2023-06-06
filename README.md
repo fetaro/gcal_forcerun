@@ -25,9 +25,16 @@ poetry install
 
 #### 定期的に実行する
 
-例) 15,30,45,0分開始の会議をターゲットにして、その1分前と2分前に本ツールを実行するように設定
+MacOSのcrontabを用いて、定期的に実行する。
 
-```$xslt
+root権限でcrontabの編集
+```bash
+$ sudo crontab -e
+```
+
+例えば 15,30,45,0分開始の会議をターゲットにして、その1分前と2分前に本ツールを実行するように設定 する場合は、以下のように記載する
+
+```
 13,14,28,29,43,44,58,59 * * * * python /path/to/gcal_forcerun/main.py >> /tmp/gcal_forcerun.log 2>&1
 ```
 
