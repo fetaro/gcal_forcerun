@@ -1,4 +1,3 @@
-import pprint
 import sys
 from pathlib import Path
 
@@ -83,7 +82,6 @@ def test_google_meet_parse():
                   'id': 'xxx',
                   'start': {'dateTime': '2023-06-28T16:30:00+09:00', 'timeZone': 'Asia/Tokyo'},
                   'summary': 'Daily Sync'}
-    pprint.pprint(event_dict)
     z = Zoom(event_dict)
     m = GoogleMeet(event_dict)
     t = Teams(event_dict)

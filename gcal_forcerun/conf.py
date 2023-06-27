@@ -12,7 +12,7 @@ CREDENTIAL_APTH = THIS_DIR / "secret" / "credentials.json"
 LAUNCH_APPLICATION = '/Applications/Google Chrome.app'
 
 # カレンダーAPIから最大何件取得するか
-API_MAX_RESULT = 5
+API_MAX_RESULT = 25
 
 # APIトークンの保管場所
 TOKEN_PATH = THIS_DIR / "work" / "token.pickle"

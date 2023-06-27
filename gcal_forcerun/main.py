@@ -2,7 +2,6 @@ import datetime
 import logging
 import os.path
 import pickle
-import pprint
 import sys
 
 from google.auth.transport.requests import Request
@@ -91,7 +90,6 @@ def call_calender_api(creds):
         singleEvents=True,
         orderBy='startTime',
     ).execute()
-    pprint.pprint(events_result)
     return events_result
 
 
