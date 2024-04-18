@@ -1,5 +1,9 @@
 # Googleカレンダーのオンライン会議を強制的に始めるツール(gcal_forcerun)
 
+**注意：このツールは古く、メンテナンスされていません。**
+
+**Pythonのセットアップが不要な次期バージョンを (https://github.com/fetaro/gcal-run)[https://github.com/fetaro/gcal-run] に用意していますので、こちらをお使いください**
+
 ### 概要
 
 Googleカレンダーに登録されたオンライン会議の開始前になったら、その会議のURLを起動する。
